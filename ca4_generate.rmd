@@ -1,7 +1,12 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
+
+
+![alt text here](daie_ca4_er_diagram_Physical_Export-2023-01-14_21-47.png)
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
