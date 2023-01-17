@@ -6,18 +6,161 @@ output:
 ---
 
 
-![alt text here](daie_ca4_er_diagram_Physical_Export-2023-01-14_21-47.png)
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
-```{r}
-plot(cars)
+```{r setup, include=FALSE}
+## Clear console on each execute and set chunk default to not show code
+cat('\014')
+#knitr::opts_chunk$set(include = FALSE)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r include=FALSE}
+## Download and load libraries
+ if(!require("RSQLite"))
+   install.packages("RSQLite")
+
+ if(!require("DBI"))
+   install.packages("DBI")
+
+ if(!require("dplyr"))
+   install.packages("dplyr")
+
+library(RSQLite)
+library(DBI)
+library(dplyr)
+```
+
+
+
+
+```{r include=FALSE}
+## Establish a connection to the MySQL DB
+
+conn = dbConnect(RSQLite::SQLite(),
+                            dbname= "daie_ca4_data.sqlite")
+```
+
+
+```{r include=FALSE}
+## Create project table
+# dbExecute(conn, "CREATE TABLE project (
+#    Id integer NOT NULL CONSTRAINT project_pk PRIMARY KEY,
+#    Name varchar(255) NOT NULL,
+#    Delivery_date datetime NOT NULL)", overwrite = T, append = T)
+
+## Create work_item table
+# dbExecute(conn, "CREATE TABLE work_item (
+#     Id integer NOT NULL CONSTRAINT work_item_pk PRIMARY KEY,
+#     Name varchar(255) NOT NULL,
+#     Status boolean NOT NULL,
+#     Team_Member_Id integer NOT NULL,
+#     CONSTRAINT work_item_Team_Member FOREIGN KEY (Team_Member_Id)
+#     REFERENCES Team_Member (Id)
+# )")
+
+
+
+## Create Table: asset
+# dbExecute(conn, "CREATE TABLE asset (
+#     Id integer NOT NULL CONSTRAINT asset_pk PRIMARY KEY,
+#     Type varchar(255) NOT NULL,
+#     Format varchar(255) NOT NULL,
+#     Library_Id integer NOT NULL,
+#     CONSTRAINT asset_library FOREIGN KEY (Library_Id)
+#     REFERENCES Library (Id)
+# )" )
+
+
+## Table: Team_work_item
+# dbExecute(conn, "CREATE TABLE Team_work_item (
+#     Team_Id integer NOT NULL,
+#     work_item_Id integer NOT NULL,
+#     CONSTRAINT Team_work_item_pk PRIMARY KEY (Team_Id,work_item_Id),
+#     CONSTRAINT Team_work_item_Team FOREIGN KEY (Team_Id)
+#     REFERENCES Team (Id),
+#     CONSTRAINT Team_work_item_work_item FOREIGN KEY (work_item_Id)
+#     REFERENCES work_item (Id)
+# )" )
+
+
+## Table: Team_Member_asset
+# dbExecute(conn, "CREATE TABLE Team_Member_asset (
+#     Team_Member_Id integer NOT NULL,
+#     asset_Id integer NOT NULL,
+#     CONSTRAINT Team_Member_asset_pk PRIMARY KEY (Team_Member_Id,asset_Id),
+#     CONSTRAINT Team_Member_asset_Team_Member FOREIGN KEY (Team_Member_Id)
+#     REFERENCES Team_Member (Id),
+#     CONSTRAINT Team_Member_asset_asset FOREIGN KEY (asset_Id)
+#     REFERENCES asset (Id)
+# )" )
+
+
+## Table: Team_Member
+# dbExecute(conn, "CREATE TABLE Team_Member (
+#     Id integer NOT NULL CONSTRAINT Team_Member_pk PRIMARY KEY,
+#     Role varchar(255) NOT NULL,
+#     First_Name varchar(255) NOT NULL,
+#     Sir_Name varchar(255) NOT NULL,
+#     Library_Id integer NOT NULL,
+#     Team_Id integer NOT NULL,
+#     CONSTRAINT Team_Member_Library FOREIGN KEY (Library_Id)
+#     REFERENCES Library (Id),
+#     CONSTRAINT Team_Member_Team FOREIGN KEY (Team_Id)
+#     REFERENCES Team (Id)
+# )" )
+
+## Table: Team
+# dbExecute(conn, "CREATE TABLE Team (
+#     Team_type varchar(255) NOT NULL,
+#     Id integer NOT NULL CONSTRAINT Team_pk PRIMARY KEY,
+#     project_Id integer NOT NULL,
+#     CONSTRAINT Team_project FOREIGN KEY (project_Id)
+#     REFERENCES project (Id)
+# )" )
+
+
+## Table: Library
+# dbExecute(conn, "CREATE TABLE Library (
+#     Id integer NOT NULL CONSTRAINT Library_pk PRIMARY KEY,
+#     project_Id integer NOT NULL,
+#     CONSTRAINT Library_project FOREIGN KEY (project_Id)
+#     REFERENCES project (Id)
+# )" )
+
+
+```
+
+
+```{r}
+
+# Check what tables exist in the data base
+
+# Check what fields exist in the table
+# dbListTable(conn, "Team")
+
+dbListTables(conn)
+dbListFields(conn, "Library")
+dbListFields(conn, "Team")
+dbListFields(conn, "Team_Member")
+dbListFields(conn, "Team_Member_asset")
+dbListFields(conn, "Team_work_item")
+dbListFields(conn, "asset")
+dbListFields(conn, "project")
+dbListFields(conn, "work_item")
+ 
+ 
+ 
+
+```
+
+
+![alt text here](daie_ca4_er_diagram_Physical_Export-2023-01-14_21-47.png)
+
+```{r include=FALSE}
+
+dbDisconnect(conn) 
+
+```
+
