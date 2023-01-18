@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "Database Generation"
 output:
   html_document:
     df_print: paged
@@ -136,11 +136,8 @@ conn = dbConnect(RSQLite::SQLite(),
 ```{r}
 
 # Check what tables exist in the data base
-
-# Check what fields exist in the table
-# dbListTable(conn, "Team")
-
 dbListTables(conn)
+# Check what fields exist in the table
 dbListFields(conn, "Library")
 dbListFields(conn, "Team")
 dbListFields(conn, "Team_Member")
@@ -156,7 +153,194 @@ dbListFields(conn, "work_item")
 ```
 
 
-![alt text here](daie_ca4_er_diagram_Physical_Export-2023-01-14_21-47.png)
+![Entity Relationship Diagram for Video Game Production](daie_ca4_er_diagram_Physical_Export-2023-01-14_21-47.png)
+
+# Inserts into project table
+
+```{r}
+# dbExecute(conn, 'INSERT INTO project (Id, Name, Delivery_date)
+# VALUES (1001, "Zombie Nation", "2024-07-22 00:00:00")  
+# ')
+
+# dbExecute(conn, 'INSERT INTO project (Id, Name, Delivery_date)
+# VALUES (1002, "Zombie Nation 2", "2025-07-22 00:00:00")
+# ')
+
+# dbExecute(conn, 'INSERT INTO project (Id, Name, Delivery_date)
+# VALUES (1003, "Duty of Combat: Special Ops", "2025-07-22 00:00:00")
+# ')
+
+dbGetQuery(conn, "SELECT * FROM project")
+```
+
+# Inserts into Team table
+
+```{r}
+# dbExecute(conn, 'INSERT INTO Team (Team_type, Id, project_Id)
+# VALUES ("Game Developers", 2001, 1001)
+# ')
+
+# dbExecute(conn, 'INSERT INTO Team (Team_type, Id, project_Id)
+# VALUES ("Animators", 3001, 1002)
+# ')
+# 
+# dbExecute(conn, 'INSERT INTO Team (Team_type, Id, project_Id)
+# VALUES ("Testers", 4001, 1003)
+# ')
+
+# dbExecute(conn, 'INSERT INTO Team (Team_type, Id, project_Id)
+# VALUES ("Concept Artists", 5001, 1002)
+# ')
+# 
+# dbExecute(conn, 'INSERT INTO Team (Team_type, Id, project_Id)
+# VALUES ("Designers", 6001, 1002)
+# ')
+
+# dbExecute(conn, 'UPDATE Team SET project_Id = 1003 WHERE Id = 4001')
+
+dbGetQuery(conn, "SELECT * FROM Team")
+
+```
+
+# Inserts into Team_Member table
+
+```{r}
+# dbExecute(conn, 'INSERT INTO Team_Member (Id, Role, First_Name, Sir_Name, Library_Id, Team_Id)
+#  VALUES (1111, "Project Manager", "Shane", "Cunningham", 1, 2001)
+#  ')
+
+# dbExecute(conn, 'INSERT INTO Team_Member (Id, Role, First_Name, Sir_Name, Library_Id, Team_Id)
+#  VALUES (1112, "Junior Dev", "Jack", "Cunningham", 1, 2001)
+#  ')
+# 
+# dbExecute(conn, 'INSERT INTO Team_Member (Id, Role, First_Name, Sir_Name, Library_Id, Team_Id)
+#  VALUES (1113, "Senior Dev", "Tricia", "Dilworth", 1, 2001)
+#  ')
+# 
+# dbExecute(conn, 'INSERT INTO Team_Member (Id, Role, First_Name, Sir_Name, Library_Id, Team_Id)
+#  VALUES (1114, "Lead Animator", "Dave", "Burne", 2, 3001)
+#  ')
+# 
+# dbExecute(conn, 'INSERT INTO Team_Member (Id, Role, First_Name, Sir_Name, Library_Id, Team_Id)
+#  VALUES (1115, "Lead Tester", "Harry", "Keane", 3, 4001)
+# ')
+
+dbGetQuery(conn, "SELECT * FROM Team_Member")
+
+```
+
+# Inserts into asset table
+
+```{r}
+# dbExecute(conn, 'INSERT INTO asset (Id, Type, Format, Library_Id)
+#           VALUES (19832,"Game physics/ Programming, Zombie Nation", "C++", 1)')
+# 
+# dbExecute(conn, 'INSERT INTO asset (Id, Type, Format, Library_Id)
+#           VALUES (11342,"Character functions/ Programming, Zombie Nation", "C++", 1)')
+# 
+# dbExecute(conn, 'INSERT INTO asset (Id, Type, Format, Library_Id)
+#           VALUES (15026,"Backend API Testing, Zombie Nation", "C++", 1)')
+# 
+# 
+# dbExecute(conn, 'INSERT INTO asset (Id, Type, Format, Library_Id)
+#           VALUES (28785, "Animation/ Level design, Zombie Nation 2", "JPG", 2)')
+# 
+# dbExecute(conn, 'INSERT INTO asset (Id, Type, Format, Library_Id)
+#           VALUES (37152, "Testing, Duty of Combat: Special Ops", "C++", 3)')
+
+# dbExecute(conn, 'DELETE FROM asset
+# WHERE Id = 28785;')
+
+dbGetQuery(conn, "SELECT * FROM asset")
+
+```
+
+# Inserts into Team_Member_asset table
+
+```{r}
+# dbExecute(conn, 'INSERT INTO Team_Member_asset (Team_Member_Id, asset_Id)
+#           VALUES (1111, 19832)')
+# 
+# dbExecute(conn, 'INSERT INTO Team_Member_asset (Team_Member_Id, asset_Id)
+#           VALUES (1112, 11342)')
+# 
+# dbExecute(conn, 'INSERT INTO Team_Member_asset (Team_Member_Id, asset_Id)
+#           VALUES (1113, 15026)')
+# 
+# dbExecute(conn, 'INSERT INTO Team_Member_asset (Team_Member_Id, asset_Id)
+#           VALUES (1114, 28785)')
+# 
+# dbExecute(conn, 'INSERT INTO Team_Member_asset (Team_Member_Id, asset_Id)
+#           VALUES (1115, 37152)')
+
+dbGetQuery(conn, "SELECT * FROM Team_Member_asset")
+
+```
+
+# Inserts into work_item table
+
+```{r}
+
+# dbExecute(conn, 'INSERT INTO work_item (Id, Name, Status, Team_Member_Id)
+#           VALUES (88986, "Project Management", TRUE, 1111)')
+
+# dbExecute(conn, 'INSERT INTO work_item (Id, Name, Status, Team_Member_Id)
+#           VALUES (88640, "Features / Frontend", TRUE, 1112)')
+# 
+# dbExecute(conn, 'INSERT INTO work_item (Id, Name, Status, Team_Member_Id)
+#           VALUES (82150, "Backend Development", TRUE, 1113)')
+# 
+# dbExecute(conn, 'INSERT INTO work_item (Id, Name, Status, Team_Member_Id)
+#           VALUES (86467, "3D Animation & Game Engine Pipeline", TRUE, 1114)')
+# 
+# dbExecute(conn, 'INSERT INTO work_item (Id, Name, Status, Team_Member_Id)
+#           VALUES (81071, "Testing", TRUE, 1115)')
+
+
+dbGetQuery(conn, "SELECT * FROM work_item")
+
+```
+
+# Inserts into Team_work_item table
+
+```{r}
+
+# dbExecute(conn, 'INSERT INTO Team_work_item (Team_Id, work_item_Id)
+# VALUES (2001, 88986)')
+# 
+# dbExecute(conn, 'INSERT INTO Team_work_item (Team_Id, work_item_Id)
+# VALUES (2001, 88640)')
+# 
+# dbExecute(conn, 'INSERT INTO Team_work_item (Team_Id, work_item_Id)
+# VALUES (2001, 82150)')
+# 
+# dbExecute(conn, 'INSERT INTO Team_work_item (Team_Id, work_item_Id)
+# VALUES (3001, 86467)')
+# 
+# dbExecute(conn, 'INSERT INTO Team_work_item (Team_Id, work_item_Id)
+# VALUES (4001, 81071)')
+
+dbGetQuery(conn, "SELECT * FROM Team_work_item")
+
+```
+
+# Inserts into Library table
+
+```{r}
+
+# dbExecute(conn, 'INSERT INTO Library (Id, project_Id)
+#           VALUES (1, 1001 )')
+# 
+# dbExecute(conn, 'INSERT INTO Library (Id, project_Id)
+#           VALUES (2, 1002)')
+# 
+# dbExecute(conn, 'INSERT INTO Library (Id, project_Id)
+#           VALUES (3, 1003)')
+
+dbGetQuery(conn, "SELECT * FROM Library")
+
+```
+
 
 ```{r include=FALSE}
 
