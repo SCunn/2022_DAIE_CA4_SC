@@ -1,5 +1,7 @@
 ---
-title: "Database Generation"
+title: "DAIE CA4 Database Generation File"
+author: "Shane Cunningham"
+date: "January, 2023"
 output:
   html_document:
     df_print: paged
@@ -167,8 +169,26 @@ dbListFields(conn, "work_item")
 # ')
 
 # dbExecute(conn, 'INSERT INTO project (Id, Name, Delivery_date)
-# VALUES (1003, "Duty of Combat: Special Ops", "2025-07-22 00:00:00")
+# VALUES (1003, "Duty of Combat: Special Ops", "2026-07-22 00:00:00")
 # ')
+
+# dbExecute(conn, 'INSERT INTO project (Id, Name, Delivery_date)
+# VALUES (1004, "Zombie Nation 3", "2027-07-22 00:00:00")
+# ')
+# 
+# dbExecute(conn, 'INSERT INTO project (Id, Name, Delivery_date)
+# VALUES (1005, "Duty of Combat: Future Warfare", "2028-07-22 00:00:00")
+# ')
+# 
+# dbExecute(conn, 'INSERT INTO project (Id, Name, Delivery_date)
+# VALUES (1006, "Zombie Nation 3: Special Edition", "2029-07-22 00:00:00")
+# ')
+# 
+# dbExecute(conn, 'INSERT INTO project (Id, Name, Delivery_date)
+# VALUES (1007, "Duty of Combat: Special Ops 2", "2030-07-22 00:00:00")
+# ')
+
+# dbExecute(conn, 'UPDATE project SET Delivery_date = "2026-04-22 00:00:00" WHERE Id = 1003')
 
 dbGetQuery(conn, "SELECT * FROM project")
 ```
@@ -348,3 +368,39 @@ dbDisconnect(conn)
 
 ```
 
+
+# Bibliography
+
+admin (2019) UPDATE Query in SQLite, W3schools. Available at: https://www.w3schools.blog/update-query-sqlite (Accessed: 18 January 2023).
+
+Bhalla, D. (no date) ‘dplyr Tutorial : Data Manipulation (50 Examples)’, ListenData. Available at: https://www.listendata.com/2016/08/dplyr-tutorial.html (Accessed: 10 December 2022).
+Datatypes In SQLite (no date). Available at: https://www.sqlite.org/datatype3.html (Accessed: 18 January 2023).
+
+Execute a data manipulation statement on a given database connection — dbSendStatement (no date). Available at: https://dbi.r-dbi.org/reference/dbsendstatement (Accessed: 18 January 2023).
+
+How to use DATETIME value in SQLite? (2018) TablePlus. Available at: https://tableplus.com/blog/2018/07/sqlite-how-to-use-datetime-value.html (Accessed: 18 January 2023).
+
+[R beginners]: Use  RSQLite, a fast and easy database in R (2020). Available at: https://www.youtube.com/watch?v=GYfmN2IeY1w (Accessed: 16 January 2023).
+
+R Markdown for a Data Analysis Report (2016). Available at: https://www.youtube.com/watch?v=0bxa7rkur9o (Accessed: 7 December 2022).
+
+R programming for beginners – statistic with R (t-test and linear regression) and dplyr and ggplot (2017). Available at: https://www.youtube.com/watch?v=ANMuuq502rE (Accessed: 20 December 2022).
+
+R SQLite Database Tutorial (no date). Available at: https://www.datacamp.com/tutorial/sqlite-in-r (Accessed: 18 January 2023).
+
+Riederer, Y.X., Christophe Dervieux, Emily (no date) How to read this book | R Markdown Cookbook. Available at: https://bookdown.org/yihui/rmarkdown-cookbook/how-to-read-this-book.html (Accessed: 10 December 2022).
+
+‘rmarkdown-cheatsheet’ (no date).
+Solutions - SQLite (NA). Available at: https://solutions.posit.co/connections/db/databases/sqlite/ (Accessed: 18 January 2023).
+
+SQL BETWEEN Operator (no date). Available at: https://www.w3schools.com/sql/sql_between.asp (Accessed: 19 January 2023).
+
+SQL INNER JOIN Keyword (no date). Available at: https://www.w3schools.com/sql/sql_join_inner.asp (Accessed: 19 January 2023).
+
+SQL ORDER BY Keyword (no date). Available at: https://www.w3schools.com/sql/sql_orderby.asp (Accessed: 19 January 2023).
+
+SQL SELECT DISTINCT Statement (no date). Available at: https://www.w3schools.com/sql/sql_distinct.asp (Accessed: 19 January 2023).
+
+SQL Subquery – How to Sub Query in SELECT Statement (2022) freeCodeCamp.org. Available at: https://www.freecodecamp.org/news/sql-subquery-how-to-sub-query-in-select-statement/ (Accessed: 19 January 2023).
+
+SQLite Home Page (no date). Available at: https://www.sqlite.org/index.html (Accessed: 18 January 2023).

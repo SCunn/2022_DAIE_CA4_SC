@@ -1,18 +1,155 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "DAIE CA4 SQLite Database Querying File"
+author: "Shane Cunningham"
+date: "January, 2023"
+output:
+  html_document:
+    df_print: paged
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 
-```{r}
-plot(cars)
+```{r setup, include=FALSE}
+## Clear console on each execute and set chunk default to not show code
+cat('\014')
+#knitr::opts_chunk$set(include = FALSE)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r include=FALSE}
+## Download and load libraries
+ if(!require("RSQLite"))
+   install.packages("RSQLite")
+
+ if(!require("DBI"))
+   install.packages("DBI")
+
+ if(!require("dplyr"))
+   install.packages("dplyr")
+
+library(RSQLite)
+library(DBI)
+library(dplyr)
+```
+
+```{r include=FALSE}
+## Establish a connection to the MySQL DB
+
+conn = dbConnect(RSQLite::SQLite(),
+                            dbname= "daie_ca4_data.sqlite")
+```
+
+# 1. SELECT with WHERE, LIKE, and OR
+
+```{r}
+## Select from the team member table and search for strings that contain the letters in the sequence of ##'ni' or the role of Lead Tester
+dbGetQuery(conn, "SELECT * FROM Team_Member 
+                  WHERE Role
+                  LIKE '%ni%'
+                  OR Role = 'Lead Tester' " )
+
+```
+
+# 2. SELECT with DISTINCT and ORDER BY
+
+```{r}
+
+## select column work_item_Id from Team_work_item and order by descending order based on Team_Id
+dbGetQuery(conn, "SELECT DISTINCT work_item_Id
+                  FROM Team_work_item 
+                  ORDER BY Team_Id DESC
+           ")
+
+```
+
+# 3. Inner Join
+
+```{r}
+# Inner Join Team and Library with project_Id
+dbGetQuery(conn, "SELECT Team.Team_type, Library.Id
+                  FROM Team
+                  INNER JOIN Library
+                  ON Team.project_id = Library.project_id
+           ")
+
+# Inner Join Team_Member.Role and asset.Type with Library_Id
+dbGetQuery(conn, "SELECT Team_Member.Role, asset.Type
+                  FROM Team_Member
+                  INNER JOIN asset
+                  ON Team_Member.Library_Id = asset.Library_Id
+           ")
+
+```
+
+# 4. Subquery with SELECT
+
+```{r}
+
+#Subquery with select from Team_Member table and show team members first and sir names with a Team_Id equal to 2001  
+
+dbGetQuery(conn, "SELECT Team_Id, First_Name, Sir_Name FROM Team_Member
+                  WHERE Team_Id IN (SELECT Team_Id
+                    FROM Team_Member
+                    WHERE Team_Id = 2001
+                  )")
+
+```
+
+# 5. SELECT across a date range
+
+```{r}
+# Select the projects delivery date between two date/times
+dbGetQuery(conn, "SELECT * FROM project
+                  WHERE Delivery_date BETWEEN '2025-07-22 00:00:00' AND '2029-07-22 00:00:00' 
+           ")
+
+```
+
+```{r include=FALSE}
+
+dbDisconnect(conn) 
+
+```
+
+# Bibliography
+
+admin (2019) UPDATE Query in SQLite, W3schools. Available at: https://www.w3schools.blog/update-query-sqlite (Accessed: 18 January 2023).
+
+Bhalla, D. (no date) ‘dplyr Tutorial : Data Manipulation (50 Examples)’, ListenData. Available at: https://www.listendata.com/2016/08/dplyr-tutorial.html (Accessed: 10 December 2022).
+Datatypes In SQLite (no date). Available at: https://www.sqlite.org/datatype3.html (Accessed: 18 January 2023).
+
+Execute a data manipulation statement on a given database connection — dbSendStatement (no date). Available at: https://dbi.r-dbi.org/reference/dbsendstatement (Accessed: 18 January 2023).
+
+How to use DATETIME value in SQLite? (2018) TablePlus. Available at: https://tableplus.com/blog/2018/07/sqlite-how-to-use-datetime-value.html (Accessed: 18 January 2023).
+
+[R beginners]: Use  RSQLite, a fast and easy database in R (2020). Available at: https://www.youtube.com/watch?v=GYfmN2IeY1w (Accessed: 16 January 2023).
+
+R Markdown for a Data Analysis Report (2016). Available at: https://www.youtube.com/watch?v=0bxa7rkur9o (Accessed: 7 December 2022).
+
+R programming for beginners – statistic with R (t-test and linear regression) and dplyr and ggplot (2017). Available at: https://www.youtube.com/watch?v=ANMuuq502rE (Accessed: 20 December 2022).
+
+R SQLite Database Tutorial (no date). Available at: https://www.datacamp.com/tutorial/sqlite-in-r (Accessed: 18 January 2023).
+
+Riederer, Y.X., Christophe Dervieux, Emily (no date) How to read this book | R Markdown Cookbook. Available at: https://bookdown.org/yihui/rmarkdown-cookbook/how-to-read-this-book.html (Accessed: 10 December 2022).
+
+‘rmarkdown-cheatsheet’ (no date).
+Solutions - SQLite (NA). Available at: https://solutions.posit.co/connections/db/databases/sqlite/ (Accessed: 18 January 2023).
+
+SQL BETWEEN Operator (no date). Available at: https://www.w3schools.com/sql/sql_between.asp (Accessed: 19 January 2023).
+
+SQL INNER JOIN Keyword (no date). Available at: https://www.w3schools.com/sql/sql_join_inner.asp (Accessed: 19 January 2023).
+
+SQL ORDER BY Keyword (no date). Available at: https://www.w3schools.com/sql/sql_orderby.asp (Accessed: 19 January 2023).
+
+SQL SELECT DISTINCT Statement (no date). Available at: https://www.w3schools.com/sql/sql_distinct.asp (Accessed: 19 January 2023).
+
+SQL Subquery – How to Sub Query in SELECT Statement (2022) freeCodeCamp.org. Available at: https://www.freecodecamp.org/news/sql-subquery-how-to-sub-query-in-select-statement/ (Accessed: 19 January 2023).
+
+SQLite Home Page (no date). Available at: https://www.sqlite.org/index.html (Accessed: 18 January 2023).
+
+
+
+
+
