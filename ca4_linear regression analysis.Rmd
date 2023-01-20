@@ -1,0 +1,175 @@
+---
+title: "DAIE CA4 Linear regression analysis"
+subtitle: "A Survey of Gamer Preferences Illustrated using GGPLOT"
+author: "Shane Cunningham"
+date: "January, 2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+# install
+if(!require("tidyr")) install.packages("tidyr")
+# install
+if(!require("ggplot2")) install.packages("ggplot2")
+# install
+if(!require("dplyr")) install.packages("dplyr")
+# install
+if(!require("broom")) install.packages("broom")
+
+if(!require("ggpubr")) install.packages("ggpubr")
+
+# library
+library(tidyr)
+library(ggplot2)
+library(dplyr)
+library(broom)
+
+library(ggpubr)
+
+
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+# Show available data sets
+
+gamers <- read.csv("amalgamated_game_survey_250_2022.csv")
+## attach(gamers) allows use of certain functions without typing data variable every time, eg. mean(age) instead of mean(gamers$age)
+attach(gamers)
+
+```
+
+
+
+# **Statement of Assumptions**
+
+---
+## Summary of Data
+```{r}
+# sample(gamers)
+
+summary(gamers)
+```
+
+## Check Data for Normality
+```{r}
+hist(gamers$age)
+
+```
+
+The histogram for the variable "age" shows a right-skewed distribution 
+
+```{r}
+hist(gamers$avg_years_playing_games)
+
+```
+
+```{r}
+hist(gamers$avg_monthly_hrs_gaming)
+
+```
+
+```{r}
+hist(gamers$avg_monthly_expenditure_dlc)
+
+```
+
+The observation from the histograms show that the avg_monthly_hrs_gaming & avg_monthly_expenditure_dlc variables are closer to the bell-shaped curve evident in a normal distribution.
+
+
+
+
+```{r  include=FALSE}
+plot(age  ~ avg_years_playing_games, data = gamers)
+
+plot(age ~ avg_monthly_hrs_gaming, data = gamers)
+
+
+plot(age ~ avg_monthly_expenditure_dlc, data = gamers)
+
+```
+
+
+#### **Check Data for Correlation Between Variables** 
+
+
+
+```{r}
+
+cor(gamers$avg_monthly_expenditure_dlc, gamers$avg_monthly_hrs_gaming)
+
+```
+The result show that there is very little correlation between the independent variables, meaning, There is little to no chance that the variables will effect each others results.
+
+## Check Data for Linearity
+```{r}
+plot(avg_monthly_expenditure_dlc ~ avg_monthly_hrs_gaming, data = gamers)
+
+```
+
+
+
+# **Testing of Assumptions**
+
+### **Linear Regression Analysis**
+
+
+```{r}
+
+gamers.graph <- ggplot(gamers, aes(x=avg_monthly_hrs_gaming, y=avg_monthly_expenditure_dlc, col=gaming_platform))+ geom_point() + geom_smooth(method="lm", col="black")
+
+gamers.graph +
+  theme_bw() +
+  labs(title = "Survey of Gamer Preferences",
+      x = "Average Monthly Hours Gaming",
+      y = "Average Monthly Expenditure (DLC)")
+
+```
+
+### **Summary**
+
+```{r}
+avg_exp.avg_hrs_play.lm <- lm(avg_monthly_expenditure_dlc ~ avg_monthly_hrs_gaming, data = gamers)
+
+summary(avg_exp.avg_hrs_play.lm)
+
+```
+
+The table above provides a summary of the residuals (The unexplained variance, model errors are calculated from the residuals), and the coefficients which shows the Intercept (Where the regression line intersects the Y-axis), the X-axis variable, the standard error, the t-value and the p-value. 
+
+# **Results**
+The data from the survey of 250 participants show that the average monthly hours of gaming had very little correlation with the average monthly expenditure of downloaded content (p-value: 0.9117).  The data are showing signs of constant variability and the outliers have no influence on the slope of the regression line.  The lack of normal distribution in the data has effected the overall result.  The Normal Q-Qplot shows a curved line, half of the line shows a good one to one relationship with the theoretical residuals. 
+
+### **Residual Plots**
+
+```{r}
+
+par(mfrow=c(2,2))
+plot(avg_exp.avg_hrs_play.lm)
+par(mfrow=c(1,1))
+
+```
+
+
+# **Bibliography**
+
+‘8.1 - Line fitting, residuals, and correlation’ (no date). Available at: https://docs.google.com/presentation/d/1DqA5n0m53j2gZeqqn4Jog2B6JEzwXNOXtLPPPKY6ZH0 (Accessed: 19 January 2023).
+
+‘8.2 - Fitting a line by least squares regression’ (no date). Available at: https://docs.google.com/presentation/d/1ABWqpgPhn3kphZ0iMPAIskb4JOrZnFJPhyPHctT-ptI (Accessed: 19 January 2023).
+
+‘8.3 - Types of outliers in linear regression’ (no date). Available at: https://docs.google.com/presentation/d/1PBKxvXhjl9M1bTcFT2bSzMRtNtWarUtdipd5EeTJzHk (Accessed: 19 January 2023).
+
+‘8.4 - Inference for linear regression’ (no date). Available at: https://docs.google.com/presentation/d/1yR49VoXAbmblIACHaWVDUpX6ROLLXYt9gsnoNV5USuI (Accessed: 19 January 2023).
+
+Bevans, R. (2020a) Linear Regression in R | A Step-by-Step Guide & Examples, Scribbr. Available at: https://www.scribbr.com/statistics/linear-regression-in-r/ (Accessed: 19 January 2023).
+
+Bevans, R. (2020b) Simple Linear Regression | An Easy Introduction & Examples, Scribbr. Available at: https://www.scribbr.com/statistics/simple-linear-regression/ (Accessed: 19 January 2023).
+
+Bhandari, P. (2021) Correlation vs. Causation | Difference, Designs & Examples, Scribbr. Available at: https://www.scribbr.com/methodology/correlation-vs-causation/ (Accessed: 20 January 2023).
+
+Line Fitting, Residuals, and Correlation (2014). Available at: https://www.youtube.com/watch?v=mPvtZhdPBhQ (Accessed: 19 January 2023).
+

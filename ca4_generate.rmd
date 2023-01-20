@@ -1,5 +1,6 @@
 ---
 title: "DAIE CA4 Database Generation File"
+subtitle: "Part A - Database Design, Database Setup"
 author: "Shane Cunningham"
 date: "January, 2023"
 output:

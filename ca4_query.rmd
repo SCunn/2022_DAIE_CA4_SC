@@ -1,5 +1,6 @@
 ---
 title: "DAIE CA4 SQLite Database Querying File"
+subtitle: "Part A - Database Querying"
 author: "Shane Cunningham"
 date: "January, 2023"
 output:
